@@ -60,7 +60,7 @@ if st.button("Add") and amount > 0:
     equiv = st.session_state.today_total / REFERENCE_BOTTLE
     today_str = date.today().isoformat()
 
-    if equiv >= GOAL_BOTTLES and today_str not in st.session_state.history:
+    if st.session_state.today_total >= TARGET_ML and today_str not in st.session_state.history:
         # Record achievement
         st.session_state.history[today_str] = st.session_state.today_total
 
@@ -73,4 +73,23 @@ if st.button("Add") and amount > 0:
         st.session_state.today_records = []
         st.session_state.celebrated_today = True
 
-      
+        # Save reset state
+        save_data()
+
+        # Allow balloons to be visible for a moment before refresh
+        import time
+        time.sleep(3.0)  # Gives browser time to render the animation
+        st.rerun()
+
+    else:
+        st.rerun()
+
+# History section
+with st.expander("History"):
+    st.write("Today's records (cleared on startup)")
+    for rec in sorted(st.session_state.today_records, key=lambda x: x["time"]):
+        st.write(f"{rec['time']} : {rec['amount']} ml")
+
+    st.write("Past Achievement Days")
+    for d, total in sorted(st.session_state.history.items(), reverse=True):
+        st.write(f"{d} : {total} ml")
