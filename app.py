@@ -91,5 +91,8 @@ with st.expander("History"):
         st.write(f"{rec['time']} : {rec['amount']} ml")
 
     st.write("Past Achievement Days")
-    for d, total in sorted(st.session_state.history.items(), reverse=True):
-        st.write(f"{d} : {int(total)} ml")
+    if st.session_state.history:
+        for d, total in sorted(st.session_state.history.items(), reverse=True):
+            st.write(f"{d} : {int(total)} ml")
+    else:
+        st.write("No achievements yet.")
